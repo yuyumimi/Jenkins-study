@@ -7,8 +7,21 @@ pipeline {
 	stages {
 		stage('Prepare') {
 			steps {
-			
-				echo 'Prepare...'
+				echo "Prepare Stage"
+				checkout scm
+				pom = readMavenPom file: 'pom.xml'
+				docker_host = "docker.ryan-miao.com"
+				img_name = "${pom.groupId}-${pom.artifactId}"
+				docker_img_name = "${docker_host}/${img_name}"
+				echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
+				echo "docker-img-name: ${docker_img_name}"
+				script {
+					build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+					if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != null) {
+						build_tag = "${env.BRANCH_NAME}-${build_tag}"
+					}
+					echo "build tag：${build_tag}"
+				}
 			}
 		}
 	    stage('Test') {
@@ -26,7 +39,9 @@ pipeline {
 		stage('Docker') {
 			steps {
 				echo 'Testing...'
-				sh "docker build -t springboot-demo ./"
+				dir('./'){
+				    docker.build("springboot-demo")
+				}
 			}
 		}
 		stage('Deploy') {
