@@ -2,12 +2,12 @@ pipeline {
 	agent any
 	    //def rtMaven = Artifactory.newMavenBuild()
 //定义mvn环境
-    def mvnHome = '/var/jenkins_home/apache-maven-3.6.0/bin/'
+    
 
 	stages {
 		stage('Build'){
 			steps {
-				sh mvnHome+"mvn clean package"
+				sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn clean package"
 				echo 'Building...1'
 			}
 		}
