@@ -1,12 +1,13 @@
 pipeline {
 	agent any
-	    def rtMaven = Artifactory.newMavenBuild()
-
+	    //def rtMaven = Artifactory.newMavenBuild()
+//定义mvn环境
+    def mvnHome = tool 'maven3.5.3'
+    env.PATH = "${mvnHome}/bin:${env.PATH}"
 	stages {
 		stage('Build'){
 			steps {
-				rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
-			
+				sh "mvn clean package"
 				echo 'Building...1'
 			}
 		}
