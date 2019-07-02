@@ -5,7 +5,7 @@ pipeline {
     
 
 	stages {
-		 stage('Prepare') {
+		stage('Prepare') {
 			echo "Prepare Stage"
 			checkout scm
 			pom = readMavenPom file: 'location/pom.xml'
