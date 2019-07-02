@@ -2,7 +2,7 @@ pipeline {
 	agent any
 	    //def rtMaven = Artifactory.newMavenBuild()
 //定义mvn环境
-    def mvnHome = tool 'maven3.5.3'
+    def mvnHome = tool '/var/jenkins_home/apache-maven-3.6.0'
     env.PATH = "${mvnHome}/bin:${env.PATH}"
 	stages {
 		stage('Build'){
