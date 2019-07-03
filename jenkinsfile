@@ -60,6 +60,9 @@ node {
 		} else {
 			echo 'One way or another, I have finished'
 		}
+		mail to: 'yuyang@capinfo.com.cn',
+             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Something is wrong with ${env.BUILD_URL}"
 	}
 	
 }
