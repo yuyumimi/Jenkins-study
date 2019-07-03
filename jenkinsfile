@@ -5,10 +5,19 @@ pipeline {
     
 
 	stages {
-		
+		stage('Pre-') {
+			steps {
+			
+				sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
+				sh "docker rmi springboot-demo"
+				echo 'Pre...'
+			}
+		}
 	    stage('Test') {
 			steps {
 			
+			
+				sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn test"
 				
 				echo 'Testing...'
 			}
@@ -19,7 +28,7 @@ pipeline {
 				sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn clean package -DskipTests"
 			}
 		}
-		stage('Docker') {
+		stage('Docker-build') {
 			steps {
 				echo 'Testing...'
 				sh "docker build -t springboot-demo ./"
@@ -27,6 +36,7 @@ pipeline {
 		}
 		stage('Deploy') {
 			steps {
+			    sh "docker run -d springboot-demo -p 8000:8000"
 				echo 'Deploying...'
 			}
 		}
