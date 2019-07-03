@@ -2,7 +2,7 @@ node {
 
     
 	stage('Preparation') {
-		checkout SCM
+		checkout scm
 		//sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
 		//sh "docker rmi springboot-demo"
 		echo 'Preparation...'
