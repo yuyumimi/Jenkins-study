@@ -36,7 +36,7 @@ pipeline {
 		}
 		stage('Deploy') {
 			steps {
-			    sh "docker run -d springboot-demo -p 8000:8000"
+			    //sh "docker run -d springboot-demo -p 8000:8000"
 				echo 'Deploying...'
 			}
 		}
