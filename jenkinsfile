@@ -10,7 +10,10 @@ node {
 		docker_host = "docker.yuyang.com"
 		img_name = "${pom.groupId}-${pom.artifactId}"
 		project_name = "${pom.name}"
-		echo "project_name:${project_name}"
+		description
+		description = "${pom.description}"
+
+		echo "project_name:${project_name}-${description}"
 		docker_img_name = "${docker_host}/${img_name}"
 		echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
 		echo "docker-img-name: ${docker_img_name}"

@@ -13,7 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>exampledemo</name>
     <packaging>jar</packaging>
-    <description>Demo project for Spring Boot</description>
+    <description>Demo project for Spring Boot1</description>
 
     <properties>
         <java.version>1.8</java.version>
