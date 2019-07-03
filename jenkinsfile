@@ -22,9 +22,7 @@ pipeline {
 		stage('Docker') {
 			steps {
 				echo 'Testing...'
-				dir('./'){
-				    docker.build("springboot-demo")
-				}
+				sh "docker build -t springboot-demo ./"
 			}
 		}
 		stage('Deploy') {
