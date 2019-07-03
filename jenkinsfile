@@ -8,8 +8,8 @@ pipeline {
 		stage('Pre-') {
 			steps {
 			
-				sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
-				sh "docker rmi springboot-demo"
+				//sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
+				//sh "docker rmi springboot-demo"
 				echo 'Pre...'
 			}
 		}
