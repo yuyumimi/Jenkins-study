@@ -1,73 +1,65 @@
 node {
 
-    
-	stage('Preparation') {
-		checkout scm
-		//sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
-		//sh "docker rmi springboot-demo"
-		echo 'Preparation...'
-		
-		pom = readMavenPom file: 'pom.xml'
-		docker_host = "docker.yuyang.com"
-		img_name = "${pom.groupId}-${pom.artifactId}"
-		project_name = "${pom.name}"
-		
-		version = "${pom.version}"
+	try {
+		stage('Preparation') {
+			checkout scm
+			//sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
+			//sh "docker rmi springboot-demo"
+			echo 'Preparation...'
+			
+			pom = readMavenPom file: 'pom.xml'
+			docker_host = "docker.yuyang.com"
+			img_name = "${pom.groupId}-${pom.artifactId}"
+			project_name = "${pom.name}"
+			
+			version = "${pom.version}"
 
-		echo "project_name:${project_name}-${version}"
-		docker_img_name = "${docker_host}/${img_name}"
-		echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
-		echo "docker-img-name: ${docker_img_name}"
-		
-		echo "Branch: ${env.git_branch}"
-		
+			echo "project_name:${project_name}-${version}"
+			docker_img_name = "${docker_host}/${img_name}"
+			echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
+			echo "docker-img-name: ${docker_img_name}"
+			
+			echo "Branch: ${env.git_branch}"
+			
 
-    
-	}
-	stage('Test') {
 		
-		sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn test"
-		
-		echo 'Testing...'
-		
-	}
-	stage('Package'){
+		}
+		stage('Test') {
+			
+			sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn test"
+			
+			echo 'Testing...'
+			
+		}
+		stage('Package'){
 
-		echo 'Packaging...'
-		sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn clean package -DskipTests"
-		
+			echo 'Packaging...'
+			sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn clean package -DskipTests"
+			
+		}
+		stage('Docker-build') {
+			
+			echo 'Testing...'
+			sh "docker build -t springboot-demo ./"
+			
+		}
+		stage('Deploy') {
+			
+			sh "docker run -p 8000:8000 -itd springboot-demo"
+			echo 'Deploying...'
+			
+		}
 	}
-	stage('Docker-build') {
-		
-		echo 'Testing...'
-		sh "docker build -t springboot-demo ./"
-		
+	catch (exc) {
+		echo 'I failed'
 	}
-	stage('Deploy') {
-		
-		sh "docker run -p 8000:8000 -itd springboot-demo"
-		echo 'Deploying...'
-		
+	finally {
+		deleteDir()
+		if (currentBuild.result == 'UNSTABLE') {
+			echo 'I am unstable :/'
+		} else {
+			echo 'One way or another, I have finished'
+		}
 	}
-	
-	 post {
-        always {
-            echo 'One way or another, I have finished'
-            deleteDir() /* clean up our workspace */
-        }
-        success {
-            echo 'I succeeeded!'
-        }
-        unstable {
-            echo 'I am unstable :/'
-        }
-        failure {
-            echo 'I failed :('
-        }
-        changed {
-            echo 'Things were different before...'
-        }
-    }
-	
 	
 }
