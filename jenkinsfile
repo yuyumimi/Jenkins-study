@@ -2,6 +2,7 @@ node {
 
     
 	stage('Preparation') {
+		checkout SCM
 		//sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
 		//sh "docker rmi springboot-demo"
 		echo 'Preparation...'
@@ -48,6 +49,25 @@ node {
 		echo 'Deploying...'
 		
 	}
+	
+	 post {
+        always {
+            echo 'One way or another, I have finished'
+            deleteDir() /* clean up our workspace */
+        }
+        success {
+            echo 'I succeeeded!'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'I failed :('
+        }
+        changed {
+            echo 'Things were different before...'
+        }
+    }
 	
 	
 }
