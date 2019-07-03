@@ -13,11 +13,9 @@ node {
 		echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
 		echo "docker-img-name: ${docker_img_name}"
 		
-		echo "Branch: ${env.BRANCH_NAME}"
+		echo "Branch: ${env.git_branch}"
 		
-        docker.image('mysql:5').withRun('-p 3306:3306') {
-            /* do things */
-        }
+
     
 	}
 	stage('Test') {
