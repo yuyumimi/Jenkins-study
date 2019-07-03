@@ -1,16 +1,26 @@
 pipeline {
 	agent any
-	    //def rtMaven = Artifactory.newMavenBuild()
+	    
 //定义mvn环境
     
 
 	stages {
-		stage('Pre-') {
+		stage('Preparation') {
 			steps {
 			
 				//sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
 				//sh "docker rmi springboot-demo"
-				echo 'Pre...'
+				echo 'Preparation...'
+				
+				pom = readMavenPom file: 'pom.xml'
+				docker_host = "docker.yuyang.com"
+				img_name = "${pom.groupId}-${pom.artifactId}"
+				docker_img_name = "${docker_host}/${img_name}"
+				echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
+				echo "docker-img-name: ${docker_img_name}"
+				
+				
+				
 			}
 		}
 	    stage('Test') {
