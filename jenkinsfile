@@ -1,55 +1,44 @@
-pipeline {
-	agent any
-	    
-//定义mvn环境
-    
+node {
 
-	stages {
-		stage('Preparation') {
-			steps {
-			
-				//sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
-				//sh "docker rmi springboot-demo"
-				echo 'Preparation...'
-				
-				pom = readMavenPom file: 'pom.xml'
-				docker_host = "docker.yuyang.com"
-				img_name = "${pom.groupId}-${pom.artifactId}"
-				docker_img_name = "${docker_host}/${img_name}"
-				echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
-				echo "docker-img-name: ${docker_img_name}"
-				
-				
-				
-			}
-		}
-	    stage('Test') {
-			steps {
-			
-			
-				sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn test"
-				
-				echo 'Testing...'
-			}
-		}
-		stage('Package'){
-			steps {
-				echo 'Packaging...'
-				sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn clean package -DskipTests"
-			}
-		}
-		stage('Docker-build') {
-			steps {
-				echo 'Testing...'
-				sh "docker build -t springboot-demo ./"
-			}
-		}
-		stage('Deploy') {
-			steps {
-			    sh "docker run -p 8000:8000 -itd springboot-demo"
-				echo 'Deploying...'
-			}
-		}
-	
+    
+	stage('Preparation') {
+		//sh "docker rm -f `docker ps -aqf ancestor=springboot-demo`"
+		//sh "docker rmi springboot-demo"
+		echo 'Preparation...'
+		
+		pom = readMavenPom file: 'pom.xml'
+		docker_host = "docker.yuyang.com"
+		img_name = "${pom.groupId}-${pom.artifactId}"
+		docker_img_name = "${docker_host}/${img_name}"
+		echo "group: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}"
+		echo "docker-img-name: ${docker_img_name}"
+		
 	}
+	stage('Test') {
+		
+		sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn test"
+		
+		echo 'Testing...'
+		
+	}
+	stage('Package'){
+
+		echo 'Packaging...'
+		sh "/var/jenkins_home/apache-maven-3.6.0/bin/mvn clean package -DskipTests"
+		
+	}
+	stage('Docker-build') {
+		
+		echo 'Testing...'
+		sh "docker build -t springboot-demo ./"
+		
+	}
+	stage('Deploy') {
+		
+		sh "docker run -p 8000:8000 -itd springboot-demo"
+		echo 'Deploying...'
+		
+	}
+	
+	
 }
