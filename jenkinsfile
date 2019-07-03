@@ -10,7 +10,7 @@ node {
 		docker_host = "docker.yuyang.com"
 		img_name = "${pom.groupId}-${pom.artifactId}"
 		project_name = "${pom.name}"
-		description
+		
 		version = "${pom.version}"
 
 		echo "project_name:${project_name}-${version}"
